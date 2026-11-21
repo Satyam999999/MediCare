@@ -85,8 +85,9 @@ def setup_pinecone(index_name, embedding):
 
 
 def load_llm():
+    model_name = os.getenv("OPENROUTER_MODEL", "nvidia/nemotron-3.5-lightning:free")
     llm = ChatOpenAI(
-        model="nvidia/nemotron-3-super-120b-a12b:free",
+        model=model_name,
         openai_api_key=os.getenv("OPENROUTER_API_KEY"),
         openai_api_base="https://openrouter.ai/api/v1",
         temperature=0.4,
