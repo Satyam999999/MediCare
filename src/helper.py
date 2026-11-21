@@ -91,8 +91,9 @@ def load_llm():
         openai_api_key=os.getenv("OPENROUTER_API_KEY"),
         openai_api_base="https://openrouter.ai/api/v1",
         temperature=0.4,
-        max_tokens=512,
-        max_retries=0,
+        max_tokens=1024,
+        max_retries=1,
+        extra_body={"reasoning": {"exclude": True}},
     )
     return llm
 
@@ -173,6 +174,10 @@ Assistant:"""
 
         # result is an AIMessage; extract text
         answer = result.content if hasattr(result, "content") else str(result)
+        if not answer and hasattr(result, "additional_kwargs"):
+            answer = result.additional_kwargs.get("reasoning", "")
+        if not answer:
+            answer = "I'm sorry, I was unable to generate a detailed response for that question. Please try rephrasing."
         return {"answer": answer, "context": docs}
 
     return RunnableLambda(run_rag)

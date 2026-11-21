@@ -106,9 +106,11 @@ class MedPulseApp {
             const data = await response.json();
             this.setLoading(false);
             
-            if (data.answer) {
+            if (data && data.answer) {
                 this.addMessage('bot', data.answer);
                 this.saveChat(query, data.answer);
+            } else if (data && data.error) {
+                this.addMessage('bot', `Error: ${data.error}`);
             } else {
                 this.addMessage('bot', "I encountered an error processing your request. Please try again.");
             }
